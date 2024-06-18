@@ -8,7 +8,7 @@ class Database
 
     public function __construct($config, $username = 'root', $password = '')
     {
-        $dsn = 'mysql:' . http_build_query($config, '', ';'); // mysql:host=localhost;port=3306;dbname=sa-project;charset=utf8mb4
+        $dsn = 'mysql:' . http_build_query($config, '', ';'); // mysql:host=localhost;port=3306;dbname=bookStore;charset=utf8mb4
 
         // initialize the PDO instance
         $this->connection = new PDO($dsn, $username, $password, [
