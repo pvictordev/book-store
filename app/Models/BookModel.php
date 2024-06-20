@@ -28,11 +28,11 @@ class BookModel
 
     public function addBook($title, $author_id, $price, $stock)
     {
-        $table = "users";
+        $table = "books";
 
         $data = [
             'Title' => $title,
-            'Author' => $author_id,
+            'AuthorID' => $author_id,
             'Price' => $price,
             'Stock' => $stock
         ];

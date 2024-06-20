@@ -13,7 +13,8 @@ $router->post('/register', 'app/Controllers/authentication/register.php');
 $router->get('/profile', 'app/Controllers/profile.php');
 
 // create
-$router->post('/books/create', 'app/views/books.view.php');
+$router->get('/books/create', 'app/views/books/create.view.php');
+$router->post('/books/create', 'app/Controllers/book.php');
 // read
 $router->get('/books', 'app/views/books/books.view.php');
 // update

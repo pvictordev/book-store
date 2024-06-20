@@ -11,8 +11,14 @@ $books = $bookModel->getBooks();
 ?>
 
 <div class="container mx-auto p-4">
-    <span onclick="history.back()" class="cursor-pointer text-3xl absolute top-3 left-3" href="">←</span>
+    <a class="cursor-pointer text-3xl absolute top-3 left-3" href="/profile">←</a>
     <h1 class="text-2xl font-bold text-center text-gray-900 mb-6">Books List</h1>
+
+    <!-- create a book -->
+    <a class="text-center mb-6" href="/books/create">
+        <span class="text-3xl rounded-full border border-2 px-2 border-black font-bold text-center text-gray-900">+</span>
+    </a>
+
     <div id="books-container" class="bg-white flex flex-wrap gap-2 p-4 rounded-lg shadow-lg">
         <?php foreach ($books as $book) : ?>
             <div class="bg-white relative p-6 rounded-lg shadow-lg max-w-xs w-64 h-72 flex flex-col justify-between">

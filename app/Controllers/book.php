@@ -11,6 +11,11 @@ $book_id = intval($_POST['_delete']);
 
 $bookID = intval($_POST['_edit']);
 
+$book_ID = intval($_POST['create']);
+
+// create
+$controller->addBook();
+
 // delete
 $controller->removeBook($book_id);
 

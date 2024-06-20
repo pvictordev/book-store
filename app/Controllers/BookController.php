@@ -13,15 +13,14 @@ class BookController
 
     public function addBook()
     {
-
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            if (isset($_POST['add_user'])) {
+            if (isset($_POST['_create'])) {
 
-                $title = '';
-                $author_id = '';
-                $price = '';
-                $stock = '';
+                $title = $_POST['title'];
+                $author_id = intval($_POST['author_id']);
+                $price = floatval($_POST['price']);
+                $stock = intval($_POST['stock']);
 
                 $result = $this->bookModel->addBook($title, $author_id, $price, $stock);
                 if ($result) {
