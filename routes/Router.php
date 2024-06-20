@@ -48,7 +48,7 @@ class Router
     {
         foreach ($this->routes as $route) {
             if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
-                if (in_array($uri, ['/profile', '/market'])) {
+                if (in_array($uri, ['/profile', '/books', '/authors', '/orders', '/orders/details'])) {
                     isAuth();
                 }
                 return require base_path($route['controller']);

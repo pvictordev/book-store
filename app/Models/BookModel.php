@@ -18,7 +18,7 @@ class BookModel
 
     public function getBook($book_id)
     {
-        $query = "SELECT * FROM users WHERE BookID = :book_id";
+        $query = "SELECT * FROM books WHERE BookID = :book_id";
 
         $userStatement = $this->db->query($query, [
             'book_id' => $book_id,
@@ -45,25 +45,26 @@ class BookModel
         $table = 'books';
         $condition = 'BookID = :book_id';
         $params =  [
-            'BookID' => $book_id
+            'book_id' => $book_id
         ];
 
         return $this->db->destroy($table, $condition, $params);
     }
 
-    public function editBook($user, $formData)
+    public function editBook($BookID, $title, $author_id, $price, $stock)
     {
-
+        $table = 'books';
         $data = [
-            'Title' => $formData['title'],
-            'AuthorID' => $formData['author_id'],
-            'Price' => $formData['price'],
-            'Stock' => $formData['Stock'],
+            'Title' => $title,
+            'AuthorID' => $author_id,
+            'Price' => $price,
+            'Stock' => $stock,
         ];
 
-        $table = 'users';
-        $condition = 'UserID = :UserID';
-        $params = ['UserID' => $user['UserID']];
+        $condition = 'BookID = :BookID';
+        $params = [
+            'BookID' => $BookID
+        ];
 
         // Update user data in the database
         return $this->db->edit($table, $data, $condition, $params);

@@ -2,7 +2,7 @@
 
 require_once base_path('app/models/BookModel.php');
 
-class UserController
+class BookController
 {
     private $bookModel;
 
@@ -23,7 +23,7 @@ class UserController
                 $price = '';
                 $stock = '';
 
-                $result = $this->userModel->addUser($title, $author_id, $price, $stock);
+                $result = $this->bookModel->addBook($title, $author_id, $price, $stock);
                 if ($result) {
                     // book added successfully
                     redirect('/books');
@@ -36,43 +36,32 @@ class UserController
     }
 
 
-    public function editBook($book_id)
+    public function editBook($BookID)
     {
-        // get the particular book
-        $book = $this->bookModel->getBook($book_id);
-
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST['_edit'])) {
+                $BookID = intval($_POST['_edit']);
+                $title = $_POST['title'];
+                $author_id = intval($_POST['author_id']);
+                $price = floatval($_POST['price']);
+                $stock = intval($_POST['stock']);
 
-            $title = '';
-            $author_id = '';
-            $price = '';
-            $stock = '';
+                // edit the a particular book
+                $this->bookModel->editBook($BookID, $title, $author_id, $price, $stock);
 
-            $data = [
-                'Title' => $title = '',
-                'AuthorID' => $author_id = '',
-                'Price' => $price,
-                'Stock' => $stock,
-            ];
-            $user = '';
-
-            // edit the a particular book
-            $this->bookModel->editBook($data, $user);
-
-            // Redirect to books page
-            redirect('/books');
+                // Redirect to books page
+                redirect('/books');
+            }
         }
     }
 
     public function removeBook($book_id)
     {
-        if (isset($_POST['_method'])) {
+        if (isset($_POST['_delete'])) {
 
             $result =  $this->bookModel->destroyBook($book_id);
 
             if ($result) {
-                session_unset();
-                session_destroy();
                 redirect("/books");
             } else {
                 dd('book remove failed.');

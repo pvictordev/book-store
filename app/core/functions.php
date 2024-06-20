@@ -34,7 +34,7 @@ function view($path, $attributes = [])
 function isAuth()
 {
     if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
-        redirect('/signin');
+        redirect('/');
     }
 }
 

@@ -6,101 +6,74 @@ class UserController
 {
     private $userModel;
 
-    // user credentials
-    private $password;
-    private $email;
-    private $user_name;
-    // validation errors
-    private $errors;
-
     public function __construct($db)
     {
         $this->userModel = new UserModel($db);
     }
 
-    public function signin()
+    public function login()
     {
-        $users = $this->userModel->getUsers();
 
-        function authenticateUser($users, $email, $password)
-        {
-            foreach ($users as $user) {
-                // compare the emails and passwords
-                if ($user['Email'] === $email) {
-                    if ($password === $user['Password']) {
-                        $_SESSION['user_id'] = $user['UserID'];
-                        $_SESSION['email'] = $email;
-                        return true; // Authentication successful
-                    }
-                }
-            }
-            dd('authentication failed.');
-        }
-
-        // do not permit the user who is authenticated to access the login in page
         if ($_SESSION['authenticated'] ?? false) {
             redirect('/profile');
+            exit;
         }
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // preserve form data
+
             $email = $_POST['email'];
             $password = $_POST["password"];
 
+            $users = $this->userModel->getUsers();
+
+            function authenticateUser($users, $email, $password)
+            {
+                foreach ($users as $user) {
+                    // Compare the emails
+                    if ($user['Email'] === $email) {
+
+                        if ($user['Password'] === $password) {
+                            $_SESSION['user_id'] = $user['UserID'];
+                            $_SESSION['email'] = $email;
+                            return true; // Authentication successful
+                        }
+                    }
+                }
+                return false; // Authentication failed
+            }
+
+            // Authenticate the user
             if (authenticateUser($users, $email, $password)) {
                 $_SESSION['authenticated'] = true;
                 redirect('/profile');
+                exit;
             } else {
-                dd('incorrect email or password.');
+                // Authentication failed
+                echo 'Incorrect email or password.';
             }
         }
     }
 
     public function addUser()
     {
-        $password = '';
-        $email = '';
-        $user_name = '';
-        $errors = [];
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            if (isset($_POST['add_user'])) {
+            $user_name = $_POST["user_name"];
+            $email = $_POST["email"];
+            $password = $_POST['password'];
 
-                $user_name = $_POST["user_name"];
-                $email = $_POST["email"];
-                $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $result = $this->userModel->addUser($user_name, $email, $password);
 
-                // Validate form data
-                if (empty($user_name) || empty($email) || empty($password)) {
-                    $errors['general'] = "All fields are required.";
-                } else {
-                    // Attempt to create a new user
-                    try {
-                        $result = $this->userModel->addUser($user_name, $email, $password);
-                        if ($result) {
-                            // User creation successful, redirect to sign-in page
-                            redirect('/signin');
-                        } else {
-                            // User creation failed
-                            $errors['general'] = "Failed to create account.";
-                        }
-                    } catch (PDOException $e) {
-                        // Handle database errors
-                        if ($e->errorInfo[1] == 1062) {
-                            $errors['email'] = "Email already exists. Please choose a different email.";
-                        } else {
-                            $errors['general'] = "Database error: " . $e->getMessage();
-                        }
-                    }
-                }
+            if ($result) {
+                // User creation successful, redirect to login page
+                $_SESSION['authenticated'] = true;
+                redirect('/');
+            } else {
+                // User creation failed
+                echo 'User creation failed';
             }
         }
-        // set variables
-        $this->password = $password;
-        $this->email = $email;
-        $this->user_name = $user_name;
-        $this->errors = $errors;
     }
 
     public function editUser($user_id)
@@ -135,16 +108,5 @@ class UserController
                 dd('error');
             }
         }
-    }
-
-    // getter for variables
-    public function getVariables()
-    {
-        return [
-            'password' => $this->password,
-            'email' => $this->email,
-            'user_name' => $this->user_name,
-            'errors' => $this->errors
-        ];
     }
 }
