@@ -1,80 +1,52 @@
 <?php
 
-// connect to the db
+require 'vendor/autoload.php'; // Load Composer's autoloader for MongoDB PHP Library
+
 class Database
 {
+    public $client;
+    public $db;
 
-    public $connection;
-
-    public function __construct($config, $username = 'root', $password = '')
+    public function __construct($config, $username = '', $password = '')
     {
-        $dsn = 'mysql:' . http_build_query($config, '', ';'); // mysql:host=localhost;port=3306;dbname=bookStore;charset=utf8mb4
+        $dsn = "mongodb://{$config['host']}:{$config['port']}";
 
-        // initialize the PDO instance
-        $this->connection = new PDO($dsn, $username, $password, [
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
-    }
-
-    // method to execute query
-    public function query($query, $params)
-    {
-        $statement = $this->connection->prepare($query);
-
-        $statement->execute($params);
-
-        return $statement;
-    }
-
-    // Method to create records in the database 
-    public function store($table, $data)
-    {
-        $keys = implode(', ', array_keys($data));
-        $values = implode(', ', array_fill(0, count($data), '?'));
-
-        $query = "INSERT INTO $table ($keys) VALUES ($values)";
-
-        $statement = $this->connection->prepare($query);
-        $statement->execute(array_values($data));
-
-        return $statement->rowCount();
-    }
-
-    // method to delete the record from the database
-    public function destroy($table, $condition, $params)
-    {
-        $query = "DELETE FROM $table WHERE $condition";
-
-        $statement = $this->connection->prepare($query);
-        $statement->execute($params);
-
-        return $statement->rowCount();
-    }
-
-    public function edit($table, $data, $condition, $params)
-    {
-        $setValues = '';
-        foreach ($data as $key => $value) {
-            $setValues .= "$key = :$key, ";
-        }
-        $setValues = rtrim($setValues, ', ');
-
-        $query = "UPDATE $table SET $setValues WHERE $condition";
-
-        $statement = $this->connection->prepare($query);
-
-        // Bind values for SET clause
-        foreach ($data as $key => $value) {
-            $statement->bindValue(":$key", $value);
+        $options = [];
+        if ($username && $password) {
+            $options['username'] = $username;
+            $options['password'] = $password;
         }
 
-        // Bind values for WHERE clause
-        foreach ($params as $key => $value) {
-            $statement->bindValue(":$key", $value);
-        }
+        // Initialize MongoDB client
+        $this->client = new MongoDB\Client($dsn, $options);
+        $this->db = $this->client->{$config['dbname']}; // Select the database
+    }
 
-        $statement->execute();
+    // Method to execute a query
+    public function query($collection, $filter = [], $options = [])
+    {
+        return $this->db->{$collection}->find($filter, $options);
+    }
 
-        return $statement->rowCount();
+    // Method to create records in the database
+    public function store($collection, $data)
+    {
+        $result = $this->db->{$collection}->insertOne($data);
+        return $result->getInsertedCount();
+    }
+
+    // Method to delete the record from the database
+    public function destroy($collection, $filter)
+    {
+        $result = $this->db->{$collection}->deleteOne($filter);
+        return $result->getDeletedCount();
+    }
+
+    // Method to edit the record in the database
+    public function edit($collection, $filter, $data)
+    {
+        $update = ['$set' => $data];
+        $result = $this->db->{$collection}->updateOne($filter, $update);
+        return $result->getModifiedCount();
     }
 }

@@ -18,7 +18,12 @@ spl_autoload_register(function ($class) {
 // database
 require base_path("config/Database.php");
 $config = require(base_path("config/config.php"));
-$db = new Database($config['database']);
+try {
+    $db = new Database($config['database']);
+} catch (MongoDB\Exception\Exception $e) {
+    echo "Database connection error: " . $e->getMessage();
+    exit();
+}
 
 // Router
 require base_path("routes/Router.php");
