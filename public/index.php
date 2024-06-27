@@ -21,7 +21,7 @@ $config = require(base_path("config/config.php"));
 try {
     $db = new Database($config['database']);
 } catch (MongoDB\Exception\Exception $e) {
-    echo "Database connection error: " . $e->getMessage();
+    echo "Database connection error: ";
     exit();
 }
 
