@@ -18,7 +18,11 @@ spl_autoload_register(function ($class) {
 // database
 require base_path("config/Database.php");
 $config = require(base_path("config/config.php"));
-$db = new Database($config['database']);
+try {
+    $db = new Database($config['database']);
+} catch (PDOException $e) {
+    echo 'Connection Faild' . $e->getMessage();
+}
 
 // Router
 require base_path("routes/Router.php");
