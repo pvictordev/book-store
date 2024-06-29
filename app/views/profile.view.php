@@ -14,7 +14,6 @@
                     <img class="w-24 h-24 rounded-full shadow-md object-cover" src="https://via.placeholder.com/150" alt="Profile Picture">
                     <h2 class="mt-4 text-xl font-semibold text-gray-900"><?= $user['Username'] ?></h2>
                     <p class="text-gray-600"><?= $user['Email'] ?></p>
-                    <p class="mt-2 text-center text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac neque eu nunc bibendum vestibulum.</p>
                 </div>
             </div>
         </div>
