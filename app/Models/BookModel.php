@@ -1,5 +1,7 @@
 <?php
 
+use MongoDB\BSON\ObjectId;
+
 class BookModel
 {
     private $db;
@@ -11,62 +13,52 @@ class BookModel
 
     public function getBooks()
     {
-        $query = "SELECT * FROM books";
-        $usersStatement = $this->db->query($query, []);
-        return $usersStatement->fetchAll();
+        $collection = $this->db->query('books');
+
+        $books = $collection->toArray();
+
+        return $books;
     }
 
     public function getBook($book_id)
     {
-        $query = "SELECT * FROM books WHERE BookID = :book_id";
-
-        $userStatement = $this->db->query($query, [
-            'book_id' => $book_id,
-        ]);
-        return $userStatement->fetch();
+        $objectId = new ObjectId($book_id); // Convert string to ObjectId
+        $cursor = $this->db->query('books', ['_id' => $objectId]);
+        $book = $cursor->toArray();
+        return !empty($book) ? $book[0] : null;
     }
 
     public function addBook($title, $author_id, $price, $stock)
     {
-        $table = "books";
+        $collection = "books";
 
         $data = [
-            'Title' => $title,
-            'AuthorID' => $author_id,
-            'Price' => $price,
-            'Stock' => $stock
+            'title' => $title,
+            'authorId' => $author_id,
+            'price' => $price,
+            'stock' => $stock
         ];
 
-        return $this->db->store($table, $data);
+        return $this->db->store($collection, $data);
     }
 
     public function destroyBook($book_id)
     {
-        $table = 'books';
-        $condition = 'BookID = :book_id';
-        $params =  [
-            'book_id' => $book_id
-        ];
-
-        return $this->db->destroy($table, $condition, $params);
+        // this Class has a squigly lines from the intelephense
+        $objectId = new ObjectId($book_id); // Convert string to ObjectId
+        return $this->db->destroy('books', ['_id' => $objectId]);
     }
 
-    public function editBook($BookID, $title, $author_id, $price, $stock)
+    public function editBook($book_id, $title, $author_id, $price, $stock)
     {
-        $table = 'books';
+        $objectId = new ObjectId($book_id); // Convert string to ObjectId
+
         $data = [
-            'Title' => $title,
-            'AuthorID' => $author_id,
-            'Price' => $price,
-            'Stock' => $stock,
+            'title' => $title,
+            'authorId' => $author_id,
+            'price' => $price,
+            'stock' => $stock
         ];
-
-        $condition = 'BookID = :BookID';
-        $params = [
-            'BookID' => $BookID
-        ];
-
-        // Update user data in the database
-        return $this->db->edit($table, $data, $condition, $params);
+        return $this->db->edit('books', ['_id' => $objectId], $data);
     }
 }

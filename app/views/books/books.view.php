@@ -1,6 +1,7 @@
 <?php require base_path('app/views/partials/head.php'); ?>
 
 <?php
+
 require_once base_path('app/Models/BookModel.php');
 
 $bookModel = new BookModel($db);
@@ -21,17 +22,20 @@ $books = $bookModel->getBooks();
 
     <div id="books-container" class="bg-white flex flex-wrap gap-2 p-4 rounded-lg shadow-lg">
         <?php foreach ($books as $book) : ?>
+
             <div class="bg-white relative p-6 rounded-lg shadow-lg max-w-xs w-64 h-72 flex flex-col justify-between">
+
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-900 mb-2 truncate"> <?= $book['Title'] ?> </h2>
-                    <p class="text-gray-700 mb-1 truncate"><?= $book['AuthorID'] ?></p>
-                    <p class="text-gray-700 mb-1">Price: <?= $book['Price'] ?></p>
-                    <p class="text-gray-700 mb-1">Stock: <?= $book['Stock'] ?></p>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2 truncate"> <?= $book['title'] ?> </h2>
+                    <strong>ID: <?= $book['_id'] ?></strong>
+                    <p class="text-gray-700 mb-1 truncate"><?= $book['authorId'] ?></p>
+                    <p class="text-gray-700 mb-1">Price: <?= $book['price'] ?></p>
+                    <p class="text-gray-700 mb-1">Stock: <?= $book['stock'] ?></p>
                 </div>
 
                 <!-- remove book  -->
                 <form method="POST" action="/books/delete" class="absolute cursor-pointer bottom-3 right-3">
-                    <input type="hidden" name="_delete" value="<?= $book['BookID'] ?>">
+                    <input type="hidden" name="_delete" value="<?= $book['_id'] ?>">
                     <button type="submit">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24" fill="none">
                             <path d="M10 11V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -45,7 +49,7 @@ $books = $bookModel->getBooks();
 
                 <!-- edit book -->
                 <form method="GET" action="/books/edit" class="absolute cursor-pointer bottom-3 left-3">
-                    <input type="hidden" name="_edit" value="<?= $book['BookID'] ?>">
+                    <input type="hidden" name="_edit" value="<?= $book['_id'] ?>">
                     <button type="submit">
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24">
@@ -67,6 +71,7 @@ $books = $bookModel->getBooks();
 
         <?php endforeach; ?>
     </div>
+
 </div>
 
 <?php require base_path('app/views/partials/foot.php'); ?>

@@ -1,7 +1,5 @@
 <?php
 
-require 'vendor/autoload.php'; // Load Composer's autoloader for MongoDB PHP Library
-
 class Database
 {
     public $client;
@@ -26,6 +24,11 @@ class Database
     public function query($collection, $filter = [], $options = [])
     {
         return $this->db->{$collection}->find($filter, $options);
+    }
+
+    public function queryOne($collection, $filter = [], $options = [])
+    {
+        return $this->db->{$collection}->findOne($filter, $options);
     }
 
     // Method to create records in the database

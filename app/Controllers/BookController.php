@@ -18,7 +18,7 @@ class BookController
             if (isset($_POST['_create'])) {
 
                 $title = $_POST['title'];
-                $author_id = intval($_POST['author_id']);
+                $author_id = $_POST['author_id'];
                 $price = floatval($_POST['price']);
                 $stock = intval($_POST['stock']);
 
@@ -34,19 +34,18 @@ class BookController
         }
     }
 
-
-    public function editBook($BookID)
+    public function editBook($book_id)
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['_edit'])) {
-                $BookID = intval($_POST['_edit']);
+                $book_id = $_POST['_edit'];
                 $title = $_POST['title'];
                 $author_id = intval($_POST['author_id']);
                 $price = floatval($_POST['price']);
                 $stock = intval($_POST['stock']);
 
                 // edit the a particular book
-                $this->bookModel->editBook($BookID, $title, $author_id, $price, $stock);
+                $this->bookModel->editBook($book_id, $title, $author_id, $price, $stock);
 
                 // Redirect to books page
                 redirect('/books');
@@ -63,7 +62,7 @@ class BookController
             if ($result) {
                 redirect("/books");
             } else {
-                dd('book remove failed.');
+                echo 'book remove failed.';
             }
         }
     }

@@ -1,5 +1,6 @@
 <?php
 
+
 class UserModel
 {
     private $db;
@@ -7,6 +8,12 @@ class UserModel
     public function __construct($db)
     {
         $this->db = $db;
+    }
+
+    public function getUserByEmail($email)
+    {
+        $user = $this->db->query('users', ['email' => $email])->toArray();
+        return $user ? $user[0] : null;
     }
 
     public function getUsers()
@@ -18,12 +25,9 @@ class UserModel
 
     public function getUser($user_id)
     {
-        $query = "SELECT * FROM users WHERE UserID = :user_id";
-
-        $userStatement = $this->db->query($query, [
-            'user_id' => $user_id,
-        ]);
-        return $userStatement->fetch();
+        // Query the Users collection
+        $user = $this->db->query('users', ['_id' => $user_id])->toArray();
+        return $user ? $user[0] : null;
     }
 
     public function addUser($user_name, $email, $password)

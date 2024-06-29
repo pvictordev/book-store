@@ -23,7 +23,6 @@ $router->post('/books/edit', 'app/Controllers/book.php');
 // delete
 $router->post('/books/delete', 'app/Controllers/book.php');
 
-
 $router->get('/authors', 'app/views/authors.view.php');
 $router->get('/orders', 'app/views/authors.view.php');
 $router->get('/orders/details', 'app/views/details.view.php');

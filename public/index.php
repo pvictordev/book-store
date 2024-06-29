@@ -16,7 +16,10 @@ spl_autoload_register(function ($class) {
 });
 
 // database
+require base_path('vendor/autoload.php'); // Load Composer's autoloader for MongoDB PHP Library
+
 require base_path("config/Database.php");
+
 $config = require(base_path("config/config.php"));
 try {
     $db = new Database($config['database']);

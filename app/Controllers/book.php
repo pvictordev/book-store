@@ -7,17 +7,15 @@ require_once base_path('app/Models/BookModel.php');
 $bookModel = new BookModel($db);
 $controller = new BookController($db);
 
-$book_id = intval($_POST['_delete']);
+$delete = $_POST['_delete'] ?? '';
 
-$bookID = intval($_POST['_edit']);
-
-$book_ID = intval($_POST['create']);
+$edit = $_POST['_edit'] ?? '';
 
 // create
 $controller->addBook();
 
 // delete
-$controller->removeBook($book_id);
+$controller->removeBook($delete);
 
 // update
-$controller->editBook($bookID);
+$controller->editBook($edit);

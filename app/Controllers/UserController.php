@@ -13,7 +13,6 @@ class UserController
 
     public function login()
     {
-
         if ($_SESSION['authenticated'] ?? false) {
             redirect('/profile');
             exit;
@@ -24,26 +23,22 @@ class UserController
             $email = $_POST['email'];
             $password = $_POST["password"];
 
-            $users = $this->userModel->getUsers();
-
-            function authenticateUser($users, $email, $password)
+            $user = $this->userModel->getUserByEmail($email);
+            function authenticateUser($user, $email, $password)
             {
-                foreach ($users as $user) {
-                    // Compare the emails
-                    if ($user['Email'] === $email) {
-
-                        if ($user['Password'] === $password) {
-                            $_SESSION['user_id'] = $user['UserID'];
-                            $_SESSION['email'] = $email;
-                            return true; // Authentication successful
-                        }
+                // Check if the user exists and compare the emails
+                if ($user && $user['email'] === $email) {
+                    if ($password == $user['password']) {
+                        $_SESSION['user_id'] = $user['_id'];
+                        $_SESSION['email'] = $email;
+                        return true; // Authentication successful
                     }
                 }
                 return false; // Authentication failed
             }
 
             // Authenticate the user
-            if (authenticateUser($users, $email, $password)) {
+            if (authenticateUser($user, $email, $password)) {
                 $_SESSION['authenticated'] = true;
                 redirect('/profile');
                 exit;

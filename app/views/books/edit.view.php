@@ -3,7 +3,7 @@
 <?php
 require base_path('app/Models/BookModel.php');
 
-$book_id = intval($_GET['_edit']);
+$book_id = $_GET['_edit'];
 
 $bookModel = new BookModel($db);
 
@@ -12,27 +12,27 @@ $book = $bookModel->getBook($book_id);
 
 <main class="h-screen flex items-center justify-center">
     <form method="POST" action="/books/edit" class="p-6 bg-white rounded-lg shadow-lg w-80">
-        <input type="hidden" name="_edit" value="<?= $book['BookID'] ?>">
+        <input type="hidden" name="_edit" value="<?= $book_id ?>">
 
         <div class="space-y-4">
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" value="<?= $book['Title'] ?>" id="title" name="title" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Book Title">
+                <input type="text" value="<?= $book['title'] ?>" id="title" name="title" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Book Title">
             </div>
 
             <div>
                 <label for="author_id" class="block text-sm font-medium text-gray-700">Author</label>
-                <input type="text" value="<?= $book['AuthorID'] ?>" id="author_id" name="author_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="author_id">
+                <input type="text" value="<?= $book['authorId'] ?>" id="author_id" name="author_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="author_id">
             </div>
 
             <div>
                 <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                <input type="text" value="<?= $book['Price'] ?>" id="price" name="price" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Price">
+                <input type="text" value="<?= $book['price'] ?>" id="price" name="price" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Price">
             </div>
 
             <div>
                 <label for="stock" class="block text-sm font-medium text-gray-700">Stock</label>
-                <input type="number" value="<?= $book['Stock'] ?>" id="stock" name="stock" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Stock">
+                <input type="number" value="<?= $book['stock'] ?>" id="stock" name="stock" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Stock">
             </div>
         </div>
 
